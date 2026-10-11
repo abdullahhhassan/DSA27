@@ -1,149 +1,133 @@
-"""Lab 01 — The interpreter, numbers, strings and lists.
-
-Lab manual: docs/labs/lab01-python-basics.md
-Tests:      tests/test_lab01.py
-
-    pytest tests/test_lab01.py -v
-
-Every function below raises `NotImplementedError`. Replace that line with
-your own code. The docstring is the contract: it says what goes in, what comes
-out, and gives examples you can try in the interpreter.
-
-Use only what Lab 01 teaches: arithmetic, strings, slicing, lists, `while`,
-and a first `if`. Do not import anything.
-"""
-
-# -- numbers ----------------------------------------------------------------
-
-
 def seconds_to_hms(seconds):
-    """Format a non-negative number of seconds as "H:MM:SS".
+    hours = seconds // (60 * 60)
+    seconds = seconds % 3600
+    minutes = seconds // 60
+    seconds = seconds % 60
+    return f"{hours}:{minutes:02d}:{seconds:02d}"
 
-    seconds_to_hms(59)     -> "0:00:59"
-    seconds_to_hms(3725)   -> "1:02:05"
-    seconds_to_hms(86400)  -> "24:00:00"
 
-    Hours are not padded; minutes and seconds are always two digits.
-    Hint: `//` and `%`, then an f-string with `:02d`.
-    """
-    raise NotImplementedError
+print(seconds_to_hms(4000))
 
+# =====================================
 
 def celsius_to_fahrenheit(celsius):
-    """Convert Celsius to Fahrenheit, rounded to one decimal place.
+    fahrenheit = celsius * 9 / 5 + 32
+    return round(fahrenheit, 1)
 
-    F = C * 9 / 5 + 32
 
-    celsius_to_fahrenheit(100)   -> 212.0
-    celsius_to_fahrenheit(-40)   -> -40.0
-    celsius_to_fahrenheit(36.6)  -> 97.9
-    """
-    raise NotImplementedError
+print(celsius_to_fahrenheit(37))
 
+# =====================================
 
 def split_evenly(total, people):
-    """Share `total` piasters between `people` as evenly as whole numbers allow.
-
-    Return a tuple (share, left_over).
-
-    split_evenly(100, 3) -> (33, 1)
-    split_evenly(90, 3)  -> (30, 0)
-    split_evenly(5, 8)   -> (0, 5)
-    """
-    raise NotImplementedError
+    each = total // people
+    remainder = total % people
+    return each, remainder
 
 
-# -- strings ----------------------------------------------------------------
+print(split_evenly(17, 5))
 
+# =====================================
 
 def initials(full_name):
-    """The upper-case initials of a name, each followed by a dot.
+    names = full_name.split()
+    result = ""
+    i = 0
+    while i < len(names):
+        result = result + names[i][0].upper() + "."
+        i = i + 1
+    return result
 
-    initials("haitham el-ghareeb")       -> "H.E."
-    initials("  Ada   King  Lovelace ")  -> "A.K.L."
-    initials("")                         -> ""
 
-    Extra spaces anywhere are ignored. Hint: `str.split()` with no argument.
-    """
-    raise NotImplementedError
+print(initials("Abdullah Hassan"))
 
+# =====================================
 
 def is_palindrome_word(word):
-    """True if `word` reads the same backwards, ignoring case and outer spaces.
+    word = word.strip().lower()
+    reversed_word = word[::-1]
+    if word == reversed_word:
+        return True
+    else:
+        return False
 
-    is_palindrome_word("Level")   -> True
-    is_palindrome_word(" noon ")  -> True
-    is_palindrome_word("python")  -> False
-    is_palindrome_word("")        -> True
 
-    Hint: one slice does the reversing.
-    """
-    raise NotImplementedError
+print(is_palindrome_word("level"))
 
+# =====================================
 
 def mask_email(email):
-    """Hide the middle of the part before "@".
-
-    Keep the first and last character of the name, replace everything between
-    them with "*" (one star per hidden character). The domain is unchanged.
-    Names of length 1 or 2 are returned unchanged.
-
-    mask_email("haitham@example.com")  -> "h*****m@example.com"
-    mask_email("ab@x.org")             -> "ab@x.org"
-
-    Hint: `str.index("@")`, slicing, and `"*" * n`.
-    """
-    raise NotImplementedError
+    position = email.index("@")
+    name = email[:position]
+    domain = email[position:]
+    if len(name) <= 2:
+        return email
+    else:
+        return name[0] + "*" * (len(name) - 2) + name[-1] + domain
 
 
-# -- lists ------------------------------------------------------------------
+print(mask_email("ahs@gmail.com"))
 
+# =====================================
 
 def middle(values):
-    """The middle of a list, as a new list.
+    length = len(values)
+    if length % 2 == 1:
+        return values[length // 2 : length // 2 + 1]
+    else:
+        return values[length // 2 - 1 : length // 2 + 1]
 
-    One element if the length is odd, two if it is even, none if it is empty.
 
-    middle([1, 2, 3])     -> [2]
-    middle([1, 2, 3, 4])  -> [2, 3]
-    middle([])            -> []
+print(middle([1, 2, 3, 4, 5]))
 
-    One slice is enough — no `if` needed.
-    """
-    raise NotImplementedError
-
+# =====================================
 
 def rotate_left(values, k):
-    """A NEW list with the elements moved k places to the left.
+    result = values[:]
+    length = len(result)
+    if length == 0:
+        return result
+    k = k % length
+    i = 0
+    while i < k:
+        first = result[0]
+        result = result[1:]
+        result = result + [first]
+        i = i + 1
+    return result
 
-    The original list must not change. k may be larger than the list.
 
-    rotate_left([1, 2, 3, 4, 5], 2)  -> [3, 4, 5, 1, 2]
-    rotate_left([1, 2, 3], 4)        -> [2, 3, 1]
-    rotate_left([], 3)               -> []
-    """
-    raise NotImplementedError
+print(rotate_left([1, 2, 3, 4, 5], 7))
 
+# =====================================
 
 def fib_list(n):
-    """The first n Fibonacci numbers, starting 0, 1.
+    result = []
+    a = 0
+    b = 1
+    i = 0
+    while i < n:
+        result = result + [a]
+        next_number = a + b
+        a = b
+        b = next_number
+        i = i + 1
+    return result
 
-    fib_list(0) -> []
-    fib_list(1) -> [0]
-    fib_list(7) -> [0, 1, 1, 2, 3, 5, 8]
 
-    Hint: the tutorial's `while` loop, with `a, b = b, a + b`.
-    """
-    raise NotImplementedError
+print(fib_list(7))
 
+# =====================================
 
 def collatz_steps(n):
-    """How many steps the Collatz rule needs to take n (>= 1) down to 1.
+    steps = 0
+    while n != 1:
+        if n % 2 == 0:
+            n = n // 2
+        else:
+            n = 3 * n + 1
+        steps = steps + 1
+    return steps
 
-    Rule: if n is even, halve it; otherwise replace it with 3n + 1.
 
-    collatz_steps(1)  -> 0
-    collatz_steps(6)  -> 8     6 3 10 5 16 8 4 2 1
-    collatz_steps(27) -> 111
-    """
-    raise NotImplementedError
+print(collatz_steps(7))
